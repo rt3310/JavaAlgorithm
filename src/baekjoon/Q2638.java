@@ -6,13 +6,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class Q2636 {
+public class Q2638 {
     private static int h;
     private static int w;
     private static String[][] cheeses;
     private static int[][] visited;
     private static int time;
-    private static int prevCount;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -29,7 +28,7 @@ public class Q2636 {
             String[] row = br.readLine().split(" ");
             for (int j = 0; j < w; j++) {
                 if (row[j].equals("1")) {
-                    visited[i][j] = 2;
+                    visited[i][j] = 5;
                 }
                 cheeses[i][j] = row[j];
             }
@@ -39,15 +38,14 @@ public class Q2636 {
             time++;
         } while (search(new int[]{0, 0}) > 0);
 
-        System.out.println(prevCount == 0 ? 0 : time);
-        System.out.println(prevCount);
+        System.out.println(time);
     }
 
     public static int search(int[] start) {
         int[][] directions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
         Deque<int[]> dq = new ArrayDeque<>();
         dq.offerLast(start);
-        visited[start[0]][start[1]] = 3;
+        visited[start[0]][start[1]] = 6;
 
         while (!dq.isEmpty()) {
             int[] cur = dq.pollFirst();
@@ -60,16 +58,16 @@ public class Q2636 {
                     continue;
                 }
 
-                if (visited[row][col] == 3 || visited[row][col] == 1) {
+                if (visited[row][col] == 6 || (visited[row][col] <= 3 && visited[row][col] != 0)) {
                     continue;
                 }
 
-                if (visited[row][col] == 2) {
-                    visited[row][col] = 1;
+                if (visited[row][col] >= 4) {
+                    visited[row][col]--;
                     continue;
                 }
 
-                visited[row][col] = 3;
+                visited[row][col] = 6;
                 dq.offerLast(new int[]{row, col});
             }
         }
@@ -78,30 +76,29 @@ public class Q2636 {
 
     public static int copyCheeses() {
         int nextCheeses = 0;
-        int count = 0;
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
-                if (visited[i][j] == 0) {
-                    continue;
-                }
-
-                if (visited[i][j] == 3) {
+                if (visited[i][j] == 0 || visited[i][j] == 6) {
                     visited[i][j] = 0;
                     continue;
                 }
 
-                if (visited[i][j] == 2) {
-                    nextCheeses++;
-                    count++;
+                if (visited[i][j] <= 3) {
+                    cheeses[i][j] = "0";
+                    visited[i][j] = 0;
                     continue;
                 }
 
-                count++;
-                cheeses[i][j] = "0";
+                if (visited[i][j] >= 4) {
+                    nextCheeses++;
+                    visited[i][j] = 5;
+                    continue;
+                }
+
                 visited[i][j] = 0;
             }
         }
-        prevCount = count;
+
         return nextCheeses;
     }
 }
