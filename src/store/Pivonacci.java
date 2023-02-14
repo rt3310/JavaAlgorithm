@@ -1,6 +1,6 @@
 package store;
 
-public class    Pivonacci {
+public class Pivonacci {
 
     public static void main(String[] args) {
         for (int i = 0; i < 47; i++) {
