@@ -24,12 +24,12 @@ public class WaterPool {
 
     public static void testCase(int caseCount) throws IOException {
         prices = Arrays.stream(br.readLine().split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
+            .mapToInt(Integer::parseInt)
+            .toArray();
 
         months = Arrays.stream(br.readLine().split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
+            .mapToInt(Integer::parseInt)
+            .toArray();
 
         search(months[0] * prices[0],   2);
         search(prices[1], 2);

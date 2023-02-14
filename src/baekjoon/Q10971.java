@@ -3,64 +3,60 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 public class Q10971 {
 
     private static int n;
-    private static int[][] map;
-    private static int goMin = Integer.MAX_VALUE;
-    private static int comeMin = Integer.MAX_VALUE;
+    private static String[][] map;
+    private static int minCost = Integer.MAX_VALUE;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         n = Integer.parseInt(br.readLine());
-        map = new int[n][n];
-        int[] visited = new int[n];
+        map = new String[n][n];
 
         for (int i = 0; i < n; i++) {
-            map[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            map[i] = br.readLine().split(" ");
         }
 
-        visited[0] = 1;
-        trip(2,  visited, true);
-        visited[0] = 0;
-        System.out.println(goMin);
+        int[] visited = new int[n];
+
+        search(visited, 0);
+        System.out.println(minCost);
     }
 
-    public static void trip(int count, int[] visited, boolean isGo) {
-        if (count == n+1) {
-            calc(visited, isGo);
-            System.out.println(Arrays.toString(visited));
+    public static void search(int[] visited, int count) {
+        if (count == n) {
+            calcCost(visited);
             return;
         }
 
         for (int i = 0; i < n; i++) {
-            if (visited[i] == 0 && i != count-1) {
-                visited[i] = count;
-                trip(count+1, visited, isGo);
+            if (visited[i] == 0) {
+                visited[i] = count + 1;
+                search(visited, count + 1);
                 visited[i] = 0;
             }
         }
     }
 
-    public static void calc(int[] visited, boolean isGo) {
+    public static void calcCost(int[] visited) {
         int[] path = new int[n];
+        for (int i = 0; i < n; i++) {
+            path[visited[i] - 1] = i;
+        }
+
         int total = 0;
         for (int i = 0; i < n; i++) {
-            path[visited[i]-1] = i;
-        }
-        System.out.println("path: " + Arrays.toString(path));
+            int cost = Integer.parseInt(map[path[i]][path[(i+1) % n]]);
 
-        for (int i = 1; i < n; i++) {
-            total += map[i - 1][path[i]];
+            if (cost == 0) {
+                return;
+            }
+            total += cost;
         }
 
-        if (isGo) {
-            goMin = Math.min(goMin, total);
-            return;
-        }
-        comeMin = Math.min(comeMin, total);
+        minCost = Math.min(minCost, total);
     }
 }

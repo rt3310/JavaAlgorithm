@@ -10,7 +10,8 @@ public class Q2206 {
 
     private static int n;
     private static int m;
-    private static String[][] map;
+    private static int[][] map;
+    private static int[][] visited;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,59 +19,57 @@ public class Q2206 {
         String[] nm = br.readLine().split(" ");
         n = Integer.parseInt(nm[0]);
         m = Integer.parseInt(nm[1]);
-
-        map = new String[n][m];
-        int[][] visited = new int[n][m];
+        map = new int[n][m];
+        visited = new int[n][m];
 
         for (int i = 0; i < n; i++) {
-            map[i] = br.readLine().split("");
+            String[] row = br.readLine().split("");
+            for (int j = 0; j < m; j++) {
+                map[i][j] = Integer.parseInt(row[j]);
+                visited[i][j] = Integer.MAX_VALUE;
+            }
         }
 
-        search(visited);
+        search();
     }
 
-    public static void search(int[][] visited) {
-        int[][] direction = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-        Deque<int[]> q = new ArrayDeque<>();
-        q.offerLast(new int[]{0, 0, 1});
-        visited[0][0] = 1;
+    public static void search() {
+        int[][] directions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        Deque<int[]> dq = new ArrayDeque<>();
+        dq.offerLast(new int[]{0, 0, 1, 0});
+        visited[0][0] = 0;
 
-        while (!q.isEmpty()) {
-            int[] cur = q.pollFirst();
+
+        while (!dq.isEmpty()) {
+            int[] cur = dq.pollFirst();
 
             if (cur[0] == n - 1 && cur[1] == m - 1) {
                 System.out.println(cur[2]);
                 return;
             }
 
-            for (int[] d : direction) {
-                int row = cur[0] + d[0];
-                int col = cur[1] + d[1];
-
-                if (row == n - 1 && col == m - 1) {
-                    System.out.println(cur[2]+1);
-                    return;
-                }
+            for (int[] direction : directions) {
+                int row = cur[0] + direction[0];
+                int col = cur[1] + direction[1];
 
                 if (row < 0 || row >= n || col < 0 || col >= m) {
                     continue;
                 }
 
-                if (visited[row][col] == 1) {
+                if (visited[row][col] <= cur[3]) {
                     continue;
                 }
 
-                if (map[row][col].equals("1") && visited[cur[0]][cur[1]] == 2) {
+                if (map[row][col] == 0) {
+                    dq.offerLast(new int[]{row, col, cur[2] + 1, cur[3]});
+                    visited[row][col] = cur[3];
                     continue;
                 }
 
-                q.offerLast(new int[]{row, col, cur[2] + 1});
-
-                if (map[row][col].equals("1")) {
-                    visited[row][col] = visited[cur[0]][cur[1]]+1;
-                    continue;
+                if (cur[3] == 0) {
+                    dq.offerLast(new int[]{row, col, cur[2] + 1, cur[3] + 1});
+                    visited[row][col] = cur[3] + 1;
                 }
-                visited[row][col] = visited[cur[0]][cur[1]];
             }
         }
         System.out.println(-1);
