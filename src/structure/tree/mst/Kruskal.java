@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class Kruskal {
     private static int v, e;
@@ -28,7 +29,7 @@ public class Kruskal {
             }
         }
 
-        Arrays.sort(graph, (n1, n2) -> Integer.compare(n1[2], n2[2]));
+        Arrays.sort(graph, Comparator.comparingInt(n -> n[2]));
 
         for (int i = 0; i < v; i++) {
             parent[i] = i;

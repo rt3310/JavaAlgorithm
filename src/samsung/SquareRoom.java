@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class SquareRoom {
 
@@ -12,7 +13,7 @@ public class SquareRoom {
     private static int n;
     private static int[][] map;
     private static int maxDistance;
-    private static List<int[]> list;
+    private static int startNumber;
 
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,7 +29,6 @@ public class SquareRoom {
         n = Integer.parseInt(br.readLine());
         map = new int[n][n];
         maxDistance = 0;
-        list = new ArrayList<>();
 
         for (int i = 0; i < n; i++) {
             String[] rooms = br.readLine().split(" ");
@@ -43,14 +43,7 @@ public class SquareRoom {
             }
         }
 
-        list.sort((a, b) -> {
-            if (a[0] == b[0]) {
-                return a[1] - b[1];
-            }
-            return a[0] - b[0];
-        });
-
-        System.out.println("#" + testCount + " " + (list.get(0)[1]) + " " + (-list.get(0)[0]));
+        System.out.println("#" + testCount + " " + (startNumber) + " " + (maxDistance));
     }
 
     public static void search(int[] start, int[] cur, int count) {
@@ -72,7 +65,11 @@ public class SquareRoom {
         }
 
         if (!isExist && maxDistance <= count) {
-            list.add(new int[]{-count, map[start[0]][start[1]]});
+            if (maxDistance == count && map[start[0]][start[1]] > startNumber) {
+                return;
+            }
+            maxDistance = count;
+            startNumber = map[start[0]][start[1]];
         }
     }
 }
