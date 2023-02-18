@@ -35,7 +35,7 @@ public class PermTest {
             visited[i] = true;
             nums.add(p[i]);
             perm(cnt + 1);
-            nums.remove(p[i]);
+            nums.remove(nums.size() - 1);
             visited[i] = false;
         }
     }
