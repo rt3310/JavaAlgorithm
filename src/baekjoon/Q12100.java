@@ -3,19 +3,17 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Q12100 {
 
     private static int n;
-    private static int[][] map;
     private static int totalMax;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         n = Integer.parseInt(br.readLine());
-        map = new int[n][n];
+        int[][] map = new int[n][n];
         totalMax = 0;
 
         for (int i = 0; i < n; i++) {
@@ -32,17 +30,10 @@ public class Q12100 {
 
     public static void search(int count, int[][] map) {
         if (count == 5) {
-//            for (int[] mr : map) {
-//                for (int md : mr) {
-//                    System.out.print(md + " ");
-//                }
-//                System.out.println();
-//            }
-//            System.out.println();
+            totalMax = Math.max(totalMax, checkMaxBlock(map));
             return;
         }
 
-        totalMax = Math.max(totalMax, checkMaxBlock(map));
         for (int i = 0; i < 4; i++) {
             search(count + 1, moveBlocks(map, i));
         }
@@ -72,8 +63,7 @@ public class Q12100 {
                     }
 
                     copy[i][copyIndex++] = prev;
-                    copy[i][copyIndex++] = map[i][j];
-                    prev = -1;
+                    prev = map[i][j];
                 }
                 if (prev != -1) {
                     copy[i][copyIndex] = prev;
@@ -103,8 +93,7 @@ public class Q12100 {
                     }
 
                     copy[i][copyIndex--] = prev;
-                    copy[i][copyIndex--] = map[i][j];
-                    prev = -1;
+                    prev = map[i][j];
                 }
                 if (prev != -1) {
                     copy[i][copyIndex] = prev;
@@ -134,8 +123,7 @@ public class Q12100 {
                     }
 
                     copy[copyIndex++][i] = prev;
-                    copy[copyIndex++][i] = map[j][i];
-                    prev = -1;
+                    prev = map[j][i];
                 }
                 if (prev != -1) {
                     copy[copyIndex][i] = prev;
@@ -164,8 +152,7 @@ public class Q12100 {
                 }
 
                 copy[copyIndex--][i] = prev;
-                copy[copyIndex--][i] = map[j][i];
-                prev = -1;
+                prev = map[j][i];
             }
             if (prev != -1) {
                 copy[copyIndex][i] = prev;
