@@ -13,7 +13,6 @@ public class Q2630 {
     private static int n;
     private static String[][] map;
     private static Map<String, Integer> color;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         color = new HashMap<>();
@@ -27,37 +26,33 @@ public class Q2630 {
             map[i] = br.readLine().split(" ");
         }
 
-        search(0, n - 1, 0, n - 1, n);
+        search(0, 0, n);
 
         System.out.println(color.get(WHITE));
         System.out.println(color.get(BLUE));
     }
-
-    public static void search(int sx, int ex, int sy, int ey, int height) {
-        if (sx >= ex && sy >= ey) {
-            color.put(map[sx][sy], color.get(map[sx][sy]) + 1);
+    
+    public static void search(int r, int c, int size) {
+        if (size == 1) {
+            color.put(map[r][c], color.get(map[r][c]) + 1);
             return;
         }
 
-        String standard = map[sx][sy];
-
-        int xmid = (sx + ex) / 2;
-        int ymid = (sy + ey) / 2;
-
-        if (isAllSame(sx, ex, sy, ey, standard)) {
-            color.put(standard, color.get(standard) + 1);
+        if (isAllSame(r, c, size, map[r][c])) {
+            color.put(map[r][c], color.get(map[r][c]) + 1);
             return;
         }
 
-        search(sx, xmid, sy, ymid, height / 2);
-        search(xmid+1, ex, sy, ymid, height / 2);
-        search(sx, xmid, ymid+1, ey, height / 2);
-        search(xmid+1, ex, ymid+1, ey, height / 2);
+        int mid = size / 2;
+        search(r, c, mid);
+        search(r, c + mid, mid);
+        search(r + mid, c, mid);
+        search(r + mid, c + mid, mid);
     }
 
-    private static boolean isAllSame(int sx, int ex, int sy, int ey, String standard) {
-        for (int i = sx; i <= ex; i++) {
-            for (int j = sy; j <= ey; j++) {
+    private static boolean isAllSame(int r, int c, int size, String standard) {
+        for (int i = r; i < r + size; i++) {
+            for (int j = c; j < c + size; j++) {
                 if (!map[i][j].equals(standard)) {
                     return false;
                 }

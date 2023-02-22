@@ -7,8 +7,10 @@ import java.io.InputStreamReader;
 public class Q1074 {
 
     private static int length;
+    private static int n;
     private static int row;
     private static int col;
+    private static int count;
 
 
     public static void main(String[] args) throws IOException {
@@ -16,34 +18,34 @@ public class Q1074 {
 
         String[] nrc = br.readLine().split(" ");
 
-        int n = Integer.parseInt(nrc[0]);
+        n = Integer.parseInt(nrc[0]);
         row = Integer.parseInt(nrc[1]);
         col = Integer.parseInt(nrc[2]);
+        count = 0;
 
         length = 2 << (n-1);
-        int count = length * length;
 
-        recur(length, count, length, length);
+        search(0, 0, length, 0);
     }
 
-    public static void recur(int width, int count, int r, int c) {
-        if (width == 1) {
-            if (r - 1 == row && c - 1 == col) {
-                System.out.println(count - 1);
-            }
+    public static void search(int r, int c, int size, int count) {
+        if (r == row && c == col) {
+            System.out.println(count);
             return;
         }
 
-        width /= 2;
-
-        if (row < r - width && col < c - width) {
-            recur(width, count - width * width * 3, r - width, c - width);
-        } else if (row < r - width && col < c) {
-            recur(width, count - width * width * 2, r - width, c);
-        } else if (row < r && col < c - width) {
-            recur(width, count - width * width, r, c - width);
-        } else {
-            recur(width, count, r, c);
+        int mid = size / 2;
+        if (row < r + mid && col < c + mid) {
+            search(r, c, mid, count);
+        }
+        if (row < r + mid && col >= c + mid) {
+            search(r, c + mid, mid, count + (mid * mid));
+        }
+        if (row >= r + mid && col < c + mid) {
+            search(r + mid, c, mid, count + (2 * mid * mid));
+        }
+        if (row >= r + mid && col >= c + mid) {
+            search(r + mid, c + mid, mid, count + (3 * mid * mid));
         }
     }
 }

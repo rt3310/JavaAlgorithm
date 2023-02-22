@@ -17,16 +17,19 @@ public class Q2447 {
 
         square(0, 0, n);
 
+        StringBuilder sb = new StringBuilder();
         for (int[] row : map) {
             for (int dot : row) {
                 if (dot == 0) {
-                    System.out.print(" ");
+                    sb.append(" ");
                     continue;
                 }
-                System.out.print("*");
+                sb.append("*");
             }
-            System.out.println();
+            sb.append("\n");
         }
+
+        System.out.println(sb);
     }
 
     public static void square(int r, int c, int depth) {
