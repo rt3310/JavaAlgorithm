@@ -3,6 +3,9 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 
 public class Q9935 {
 
@@ -12,40 +15,26 @@ public class Q9935 {
         String str = br.readLine();
         String deleteStr = br.readLine();
 
-        while (true) {
-            String encodedStr = boom(str, deleteStr);
-
-            if (encodedStr.equals("")) {
-                System.out.println("FRULA");
-                break;
-            }
-
-            if (str.equals(encodedStr)) {
-                System.out.println(str);
-                break;
-            }
-            str = encodedStr;
-        }
-    }
-
-    public static String boom(String str, String deleteStr) {
-        StringBuilder sb = new StringBuilder();
         int strLength = str.length();
         int deleteStrLength = deleteStr.length();
-
-        int idx = 0;
-        while (idx < strLength - deleteStrLength + 1) {
-            if (str.substring(idx, idx + deleteStrLength).equals(deleteStr)) {
-                idx += deleteStrLength;
-                continue;
+        StringBuilder sb = new StringBuilder(str.substring(0, deleteStrLength));
+        for (int i = deleteStrLength; i <= strLength; i++) {
+            while (sb.length() >= deleteStrLength &&
+                    sb.substring(sb.length() - deleteStrLength).equals(deleteStr)) {
+                sb.delete(sb.length() - deleteStrLength, sb.length());
             }
-            sb.append(str.charAt(idx));
-            idx++;
+
+            if (i == strLength) {
+                break;
+            }
+
+            sb.append(str.charAt(i));
         }
-        sb.append(str.substring(idx));
-        if (sb.toString().equals(deleteStr)) {
-            return "";
+
+        if (sb.length() == 0) {
+            System.out.println("FRULA");
+            return;
         }
-        return sb.toString();
+        System.out.println(sb);
     }
 }
