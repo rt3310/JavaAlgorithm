@@ -12,7 +12,6 @@ public class Q17472 {
     private static int[][] map;
     private static boolean[][] visited;
     private static int[] parent;
-    private static boolean check;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -125,7 +124,6 @@ public class Q17472 {
     }
 
     public static void union(int a, int b) {
-        check = false;
         a = getParent(a);
         b = getParent(b);
 
@@ -133,6 +131,5 @@ public class Q17472 {
             return;
         }
         parent[a] = b;
-        check = true;
     }
 }
