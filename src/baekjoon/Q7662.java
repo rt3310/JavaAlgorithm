@@ -51,10 +51,24 @@ public class Q7662 {
             if (x == 1) {
                 while (!maxpq.isEmpty()) {
                     int maxValue = maxpq.poll();
-                    if (counts.get(maxValue) == null || counts.get(maxValue) == 0) {
-                        continue;
+                    if (counts.getOrDefault(maxValue, 0) > 0) {
+                        counts.put(maxValue, counts.get(maxValue) - 1);
+                        count--;
+                        if (count == 0) {
+                            maxpq.clear();
+                            minpq.clear();
+                            counts.clear();
+                        }
+                        break;
                     }
-                    counts.put(maxValue, counts.get(maxValue) - 1);
+                }
+                continue;
+            }
+
+            while (!minpq.isEmpty()) {
+                int minValue = minpq.poll();
+                if (counts.getOrDefault(minValue, 0) > 0) {
+                    counts.put(minValue, counts.get(minValue) - 1);
                     count--;
                     if (count == 0) {
                         maxpq.clear();
@@ -63,22 +77,6 @@ public class Q7662 {
                     }
                     break;
                 }
-                continue;
-            }
-
-            while (!minpq.isEmpty()) {
-                int minValue = minpq.poll();
-                if (counts.get(minValue) == null || counts.get(minValue) == 0) {
-                    continue;
-                }
-                counts.put(minValue, counts.get(minValue) - 1);
-                count--;
-                if (count == 0) {
-                    maxpq.clear();
-                    minpq.clear();
-                    counts.clear();
-                }
-                break;
             }
         }
 

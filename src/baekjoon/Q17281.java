@@ -3,17 +3,13 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.StringTokenizer;
 
 public class Q17281 {
     
     private static int n;
     private static int[][] hitters;
-    private static int curHitter;
-    private static boolean[] rue;
     private static int maxPoint;
 
     public static void main(String[] args) throws IOException {
@@ -21,8 +17,6 @@ public class Q17281 {
         
         n = Integer.parseInt(br.readLine());
         hitters = new int[n + 1][10];
-        curHitter = 1;
-        rue = new boolean[4];
         maxPoint = 0;
 
         for (int i = 1; i <= n; i++) {
@@ -33,12 +27,12 @@ public class Q17281 {
         }
 
         boolean[] visited = new boolean[10];
-        for (int i = 1; i < 10; i++) {
-            int[] order = new int[10];
+        int[] order = new int[10];
+        order[4] = 1;
+        visited[1] = true;
+        for (int i = 2; i < 10; i++) {
             order[1] = i;
             visited[i] = true;
-            order[4] = 1;
-            visited[1] = true;
             batchHitters(2, visited, order);
             visited[i] = false;
         }
@@ -48,8 +42,7 @@ public class Q17281 {
 
     public static void batchHitters(int count, boolean[] visited, int[] order) {
         if (count == 10) {
-            maxPoint = Math.max(maxPoint, oneRound(order));
-//            System.out.println(Arrays.toString(order));
+            maxPoint = Math.max(maxPoint, innings(order));
             return;
         }
 
@@ -69,21 +62,15 @@ public class Q17281 {
         }
     }
     
-    public static int oneRound(int[] hitterOrders) {
-        int[][] curHitters = new int[n + 1][10];
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j < 10; j++) {
-                curHitters[i][j] = hitters[i][hitterOrders[j]];
-            }
-        }
-
-        int outCount = 0;
-        int order = -1;
+    public static int innings(int[] hitterOrders) {
+        int order = 1;
         int point = 0;
         for (int i = 1; i <= n; i++) {
+            int outCount = 0;
+            boolean[] rue = new boolean[4];
             while (outCount < 3) {
-                order = (order + 1) % 9 + 1;
-                int result = curHitters[i][order];
+                int result = hitters[i][hitterOrders[order]];
+                order = order % 9 + 1;
                 if (result == 0) {
                     outCount++;
                     continue;
@@ -91,13 +78,13 @@ public class Q17281 {
 
                 for (int j = 3; j > 0; j--) {
                     if (rue[j]) {
-                        int moveCount = j + result;
                         rue[j] = false;
-                        if (moveCount > 3) {
+                        int next = j + result;
+                        if (next > 3) {
                             point++;
                             continue;
                         }
-                        rue[moveCount] = true;
+                        rue[next] = true;
                     }
                 }
 
