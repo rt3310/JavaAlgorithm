@@ -1,49 +1,43 @@
-package baekjoon;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class Q12865 {
+public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        List<int[]> list = new ArrayList<>();
 
         String[] nk = br.readLine().split(" ");
         int n = Integer.parseInt(nk[0]);
         int k = Integer.parseInt(nk[1]);
-        int[][] dp = new int[n][2];
+        int[][] things = new int[n + 1][2];
+        int[] dp = new int[k + 1];
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 1; i <= n; i++) {
             String[] wv = br.readLine().split(" ");
             int w = Integer.parseInt(wv[0]);
             int v = Integer.parseInt(wv[1]);
-            list.add(new int[]{w, v});
+            things[i] = new int[]{w, v};
         }
-        list.sort(Comparator.comparingInt(v -> v[0]));
 
-        dp[0][0] = list.get(0)[0];
-        dp[0][1] = list.get(0)[1];
-        for (int i = 1; i < n; i++) {
-            if (list.get(i)[0] + dp[i - 1][0] <= k) {
-                dp[i][0] = list.get(i)[0] + dp[i - 1][0];
-                dp[i][1] = list.get(i)[1] + dp[i - 1][1];
+        for (int i = 1; i <= n; i++) {
+            int j = things[i][0];
+            if (j > k) {
                 continue;
             }
-            if (dp[i - 1][1] > list.get(i)[0]) {
-                dp[i][0] = dp[i - 1][0];
-                dp[i][1] = dp[i - 1][1];
-                continue;
+            dp[j] = things[i][1];
+            for (int l = k - j - 1; l > 0; l--) {
+                if (l == j) {
+                    continue;
+                }
+                dp[j + l] = Math.max(dp[j + l], dp[j] + dp[l]);
             }
-            dp[i][0] = list.get(i)[0];
-            dp[i][1] = list.get(i)[1];
         }
 
         int max = 0;
-        for (int[] dr : dp) {
-            max = Math.max(max, dr[1]);
+        for (int i = 1; i <= k; i++) {
+            max = Math.max(max, dp[i]);
         }
         System.out.println(max);
     }
