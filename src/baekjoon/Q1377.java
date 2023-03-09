@@ -1,9 +1,10 @@
 package baekjoon;
 
-import javax.swing.plaf.IconUIResource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class Q1377 {
 
@@ -11,21 +12,21 @@ public class Q1377 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int n = Integer.parseInt(br.readLine());
-        int[] arr = new int[n];
+        int[][] arr = new int[n][2];
         for (int i = 0; i < n; i++) {
-            arr[i] = Integer.parseInt(br.readLine());
+            int num = Integer.parseInt(br.readLine());
+            arr[i] = new int[]{num, i};
         }
 
-        int answer = 1;
-        int max = arr[n - 1];
+        Arrays.sort(arr, Comparator.comparingInt(v -> v[0]));
+
+        int count = 1;
+        int min = arr[n - 1][0];
         for (int i = n - 2; i >= 0; i--) {
-            if (arr[i] > max) {
-                max = arr[i];
-                answer++;
-                break;
-            }
+            count = Math.max(count, arr[i][1] - i);
         }
-        System.out.println(answer);
+
+        System.out.println(count + 1);
     }
 }
 // 1 10 8 11 9

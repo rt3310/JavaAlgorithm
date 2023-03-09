@@ -31,6 +31,7 @@ public class NextPermTest {
         while (pivot > 0 && p[pivot - 1] > p[pivot]) {
             pivot--;
         }
+
         if (pivot == 0) {
             return false;
         }

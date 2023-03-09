@@ -12,6 +12,7 @@ public class Q17472 {
     private static int[][] map;
     private static boolean[][] visited;
     private static int[] parent;
+    private static boolean check;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -48,13 +49,20 @@ public class Q17472 {
             for (int j = 0; j < m - 1; j++) {
                 if (map[i][j] != 0 && map[i][j + 1] == 0) {
                     start = map[i][j];
+                    length++;
                     continue;
                 }
-                if (map[i][j] == 0 && map[i][j + 1] != 0 && length > 1 && start != 0) {
-                    pq.add(new int[]{start, map[i][j + 1], length});
+                if (map[i][j] == 0 && map[i][j + 1] != 0 && start != 0) {
+                    if (length > 1) {
+                        pq.offer(new int[]{start, map[i][j + 1], length});
+                    }
+                    start = 0;
+                    length = 0;
                     continue;
                 }
-                length++;
+                if (start != 0 && map[j][i] == 0) {
+                    length++;
+                }
             }
         }
 
@@ -64,14 +72,26 @@ public class Q17472 {
             for (int j = 0; j < n - 1; j++) {
                 if (map[j][i] != 0 && map[j + 1][i] == 0) {
                     start = map[j][i];
+                    length++;
                     continue;
                 }
-                if (map[j][i] == 0 && map[j + 1][i] != 0 && length > 1 && start != 0) {
-                    pq.add(new int[]{start, map[j + 1][i], length});
+                if (map[j][i] == 0 && map[j + 1][i] != 0 && start != 0) {
+                    if (length > 1) {
+                        pq.offer(new int[]{start, map[j + 1][i], length});
+                    }
+                    start = 0;
+                    length = 0;
                     continue;
                 }
-                length++;
+                if (start != 0 && map[i][j] == 0) {
+                    length++;
+                }
             }
+        }
+
+        if (pq.isEmpty()) {
+            System.out.println(-1);
+            return;
         }
 
         parent = new int[count + 1];
@@ -80,8 +100,25 @@ public class Q17472 {
             parent[i] = i;
         }
 
-        pq.forEach(e -> System.out.println(Arrays.toString(e)));
+        int total = 0;
+        int edgeCount = 0;
+        while (edgeCount < count - 3) {
+            if (pq.isEmpty()) {
+                System.out.println(-1);
+                return;
+            }
+            int[] poll = pq.poll();
+            int a = poll[0];
+            int b = poll[1];
+            int distance = poll[2];
+            union(a, b);
+            if (check) {
+                total += distance;
+                edgeCount++;
+            }
+        }
 
+        System.out.println(total);
     }
 
     public static void search(int[] start, int count) {

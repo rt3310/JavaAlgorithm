@@ -7,20 +7,21 @@ import java.util.*;
 
 public class Q1167 {
 
-    private static List<List<int[]>> tree = new ArrayList<>();
-    private static int[] weights;
-    private static int[] linkCount;
+    private static List<List<int[]>> tree;
+    private static boolean[] visited;
+    private static int maxVertex;
+    private static int max;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int n = Integer.parseInt(br.readLine());
-        weights = new int[n + 1];
-        linkCount = new int[n + 1];
         tree = new ArrayList<>();
         for (int i = 0; i <= n; i++) {
             tree.add(new ArrayList<>());
         }
+        visited = new boolean[n + 1];
+        max = Integer.MIN_VALUE;
 
         for (int i = 0; i < n; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -32,39 +33,30 @@ public class Q1167 {
                 }
                 int weight = Integer.parseInt(st.nextToken());
                 tree.get(vertex1).add(new int[]{vertex2, weight});
-                linkCount[vertex1]++;
-                linkCount[vertex2]++;
             }
         }
 
-        search(tree.get(1).get(0));
-        System.out.println(Arrays.toString(weights));
+        visited[1] = true;
+        search(1, 0);
+        visited[1] = false;
+        visited[maxVertex] = true;
+        search(maxVertex, 0);
+
+        System.out.println(max);
     }
 
-    public static void search(int[] start) {
-        Queue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(c -> -c[1]));
-        pq.offer(start);
-        weights[start[0]] = start[1];
-
-        while (!pq.isEmpty()) {
-            int[] poll = pq.poll();
-            int curVertex = poll[0];
-            int curWeight = poll[1];
-
-            if (weights[curVertex] > curWeight) {
-                continue;
-            }
-
-            for (int[] next : tree.get(curVertex)) {
-                int nextVertex = next[0];
-                int nextWeight = next[1];
-
-                if (weights[nextVertex] < weights[curVertex] + nextWeight) {
-                    pq.offer(new int[] {nextVertex, weights[curVertex] + nextWeight});
-                    weights[nextVertex] = weights[curVertex] + nextWeight;
-                }
-            }
+    public static void search(int cur, int total) {
+        if (total > max) {
+            max = total;
+            maxVertex = cur;
         }
 
+        for (int[] next : tree.get(cur)) {
+            if (!visited[next[0]]) {
+                visited[next[0]] = true;
+                search(next[0], total + next[1]);
+                visited[next[0]] = false;
+            }
+        }
     }
 }

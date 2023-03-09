@@ -8,82 +8,95 @@ import java.util.*;
 public class Q2887 {
 
     static class Edge {
-        private int vertex;
-        private long distance;
+        private int vertex1;
+        private int vertex2;
+        private int distance;
 
-        public Edge(int vertex, long distance) {
-            this.vertex = vertex;
+        public Edge(int vertex1, int vertex2, int distance) {
+            this.vertex1 = vertex1;
+            this.vertex2 = vertex2;
             this.distance = distance;
         }
 
-        public int getVertex() {
-            return vertex;
+        public int getVertex1() {
+            return vertex1;
         }
 
-        public long getDistance() {
+        public int getVertex2() {
+            return vertex2;
+        }
+
+        public int getDistance() {
             return distance;
         }
     }
 
     private static int[] parent;
-    private static List<List<Edge>> graph;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int n = Integer.parseInt(br.readLine());
-        graph = new ArrayList<>();
-        for (int i = 0; i <= n; i++) {
-            graph.add(new ArrayList<>());
+        List<int[]> planets = new ArrayList<>();
+        parent = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
         }
-        List<long[]> planets = new ArrayList<>();
-        planets.add(new long[0]);
 
         for (int i = 0; i < n; i++) {
             String[] xyz = br.readLine().split(" ");
-            planets.add(new long[]{Long.parseLong(xyz[0]), Long.parseLong(xyz[1]), Long.parseLong(xyz[2])});
+            planets.add(new int[]{Integer.parseInt(xyz[0]), Integer.parseInt(xyz[1]), Integer.parseInt(xyz[2]), i});
         }
 
+        Queue<Edge> edges = new PriorityQueue<>(Comparator.comparingInt(Edge::getDistance));
 
-        for (int i = 1; i <= n; i++) {
-            for (int j = i + 1; j <= n; j++) {
-                long[] vertex1 = planets.get(i);
-                long[] vertex2 = planets.get(j);
-                long min1 = Long.min(Math.abs(vertex1[0] - vertex2[0]), Math.abs(vertex1[1] - vertex2[1]));
-                long minDistance = Long.min(min1, Math.abs(vertex1[2] - vertex2[2]));
-                graph.get(i).add(new Edge(j, minDistance));
-                graph.get(j).add(new Edge(i, minDistance));
+        for (int i = 0; i < 3; i++) {
+            int finalI = i;
+            planets.sort(Comparator.comparingInt(v -> v[finalI]));
+
+            for (int j = 0; j < n - 1; j++) {
+                int[] vertex1 = planets.get(j);
+                int[] vertex2 = planets.get(j + 1);
+                int x = Math.abs(vertex1[0] - vertex2[0]);
+                int y = Math.abs(vertex1[1] - vertex2[1]);
+                int z = Math.abs(vertex1[2] - vertex2[2]);
+                int min = Math.min(Math.min(x, y), z);
+                edges.offer(new Edge(vertex1[3], vertex2[3], min));
             }
         }
 
-        System.out.println(search(1, n - 1));
-    }
-
-    public static long search(int start, int n) {
-        boolean[] visited = new boolean[n + 1];
-        Queue<Edge> pq = new PriorityQueue<>(Comparator.comparingLong(Edge::getDistance));
-        pq.offer(new Edge(start, 0));
-
-        long total = 0;
-        while (!pq.isEmpty()) {
-            Edge edge = pq.poll();
-            int vertex = edge.getVertex();
-            long distance = edge.getDistance();
-
-            if (visited[vertex]) {
+        int count = 0;
+        int total = 0;
+        while (count < n - 1) {
+            Edge edge = edges.poll();
+            if (!union(edge.getVertex1(), edge.getVertex2())) {
                 continue;
             }
-
-            visited[vertex] = true;
-            total += distance;
-
-            for (Edge e : graph.get(vertex)) {
-                if (!visited[e.getVertex()]) {
-                    pq.add(e);
-                }
-            }
+            total += edge.getDistance();
+            count++;
         }
+        System.out.println(total);
+    }
 
-        return total;
+    public static int getParent(int x) {
+        if (parent[x] == x) {
+            return x;
+        }
+        return parent[x] = getParent(parent[x]);
+    }
+
+    public static boolean union(int a, int b) {
+        a = getParent(a);
+        b = getParent(b);
+
+        if (a == b) {
+            return false;
+        }
+        if (a < b) {
+            parent[b] = a;
+            return true;
+        }
+        parent[a] = b;
+        return true;
     }
 }

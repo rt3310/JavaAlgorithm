@@ -6,9 +6,9 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Q7662 {
+
     private static BufferedReader br;
     private static StringBuilder sb;
-
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
         sb = new StringBuilder();
@@ -22,17 +22,17 @@ public class Q7662 {
     }
 
     public static void testCase() throws IOException {
+        Map<Long, Integer> counts = new HashMap<>();
+        Queue<Long> minpq = new PriorityQueue<>(Comparator.comparingLong(v -> v));
+        Queue<Long> maxpq = new PriorityQueue<>(Comparator.comparingLong(v -> -v));
+
         int n = Integer.parseInt(br.readLine());
-        Queue<Integer> minpq = new PriorityQueue<>(Comparator.comparingInt(v -> v));
-        Queue<Integer> maxpq = new PriorityQueue<>((v1, v2) -> -(v1.compareTo(v2)));
-        Map<Integer, Integer> counts = new HashMap<>();
 
         int count = 0;
         for (int i = 0; i < n; i++) {
             String[] input = br.readLine().split(" ");
             String command = input[0];
-            int x = Integer.parseInt(input[1]);
-
+            long x = Long.parseLong(input[1]);
             if (command.equals("I")) {
                 minpq.offer(x);
                 maxpq.offer(x);
@@ -42,22 +42,23 @@ public class Q7662 {
             }
 
             if (count == 0) {
-                maxpq.clear();
                 minpq.clear();
+                maxpq.clear();
                 counts.clear();
                 continue;
             }
 
-            if (x == 1) {
-                while (!maxpq.isEmpty()) {
-                    int maxValue = maxpq.poll();
-                    if (counts.getOrDefault(maxValue, 0) > 0) {
-                        counts.put(maxValue, counts.get(maxValue) - 1);
+            if (x == -1) {
+                while (!minpq.isEmpty()) {
+                    long minValue = minpq.poll();
+                    if (counts.getOrDefault(minValue, 0) > 0) {
+                        counts.put(minValue, counts.get(minValue) - 1);
                         count--;
                         if (count == 0) {
-                            maxpq.clear();
                             minpq.clear();
+                            maxpq.clear();
                             counts.clear();
+                            continue;
                         }
                         break;
                     }
@@ -65,33 +66,36 @@ public class Q7662 {
                 continue;
             }
 
-            while (!minpq.isEmpty()) {
-                int minValue = minpq.poll();
-                if (counts.getOrDefault(minValue, 0) > 0) {
-                    counts.put(minValue, counts.get(minValue) - 1);
+            while (!maxpq.isEmpty()) {
+                long maxValue = maxpq.poll();
+                if (counts.getOrDefault(maxValue, 0) > 0) {
+                    counts.put(maxValue, counts.get(maxValue) - 1);
                     count--;
                     if (count == 0) {
-                        maxpq.clear();
                         minpq.clear();
+                        maxpq.clear();
                         counts.clear();
+                        continue;
                     }
                     break;
                 }
             }
         }
 
-        int max = Integer.MIN_VALUE;
-        int min = Integer.MAX_VALUE;
-        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
-            if (entry.getValue() > 0) {
-                int key = entry.getKey();
+        long max = 0;
+        long min = Long.MAX_VALUE;
+        boolean isEmpty = true;
+        for (Map.Entry<Long, Integer> v : counts.entrySet()) {
+            if (v.getValue() > 0) {
+                isEmpty = false;
+                long key = v.getKey();
                 max = Math.max(max, key);
                 min = Math.min(min, key);
             }
         }
 
-        if (count == 0) {
-            sb.append("EMPTY").append("\n");
+        if (isEmpty) {
+            sb.append("EMPTY\n");
             return;
         }
 

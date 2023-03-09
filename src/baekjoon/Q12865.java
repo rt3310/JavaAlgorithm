@@ -1,9 +1,11 @@
+package baekjoon;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class Main {
+public class Q12865 {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,13 +28,10 @@ public class Main {
             if (j > k) {
                 continue;
             }
-            dp[j] = things[i][1];
-            for (int l = k - j - 1; l > 0; l--) {
-                if (l == j) {
-                    continue;
-                }
-                dp[j + l] = Math.max(dp[j + l], dp[j] + dp[l]);
+            for (int l = k - j; l > 0; l--) {
+                dp[j + l] = Math.max(dp[j + l], things[i][1] + dp[l]);
             }
+            dp[j] = Math.max(dp[j], things[i][1]);
         }
 
         int max = 0;

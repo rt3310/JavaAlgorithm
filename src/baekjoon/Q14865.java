@@ -18,6 +18,7 @@ public class Q14865 {
         String[] startXY = br.readLine().split(" ");
         long startX = Long.parseLong(startXY[0]);
         long startY = Long.parseLong(startXY[1]);
+        long startDownX = 0;
 
         long prevX = startX;
         long prevY = startY;
@@ -39,13 +40,21 @@ public class Q14865 {
                 }
                 isExist = false;
             }
+
+            if (!isExist && prevX == x && y <= 0 && prevY > 0) {
+                startDownX = x;
+            }
             prevX = x;
             prevY = y;
         }
 
         if (prevX == startX && startY > 0 && prevY < 0) {
             up = startX;
-            isExist = true;
+            if (up < startDownX) {
+                list.add(new long[]{up, startDownX});
+            } else {
+                list.add(new long[]{startDownX, up});
+            }
         } else if (isExist && prevX == startX && startY < 0 && prevY > 0) {
             if (up > startX) {
                 list.add(new long[] {startX, up});
