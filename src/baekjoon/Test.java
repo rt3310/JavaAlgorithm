@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 
 public class Test {
     public static void main(String[] args) throws NumberFormatException, IOException {
-        int total = 2097151;
-        System.out.println(Integer.toBinaryString(total & (1 << 10)));
+        System.out.println(10 << 3);
     }
 }
