@@ -7,10 +7,9 @@ import java.util.StringTokenizer;
 
 public class Q11403 {
 
+    private static final int INF = 1_000_000_000;
     private static int n;
     private static int[][] graph;
-    private static boolean[] visited;
-    private static int[][] result;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,8 +17,6 @@ public class Q11403 {
 
         n = Integer.parseInt(br.readLine());
         graph = new int[n][n];
-        result = new int[n][n];
-        visited = new boolean[n];
 
         for (int i = 0; i < n; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -29,35 +26,28 @@ public class Q11403 {
         }
 
         for (int i = 0; i < n; i++) {
-            visited[i] = true;
-            search(i, i);
-            visited[i] = false;
+            for (int j = 0; j < n; j++) {
+                if (graph[i][j] == 0) {
+                    graph[i][j] = INF;
+                }
+            }
         }
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                sb.append(result[i][j]).append(" ");
+                for (int k = 0; k < n; k++) {
+                    graph[j][k] = Math.min(graph[j][k], graph[j][i] + graph[i][k]);
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                sb.append(graph[i][j] == INF ? 0 : 1).append(" ");
             }
             sb.append("\n");
         }
 
         System.out.print(sb);
-    }
-
-    public static void search(int cur, int start) {
-        for (int i = 0; i < n; i++) {
-            if (visited[i]) {
-                continue;
-            }
-
-            if (graph[cur][i] == 0) {
-                continue;
-            }
-
-            visited[i] = true;
-            result[start][i] = 1;
-            search(i, start);
-            visited[i] = false;
-        }
     }
 }

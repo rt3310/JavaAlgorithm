@@ -3,47 +3,40 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 
 public class Q1654 {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String[] input = br.readLine().split(" ");
-        int k = Integer.parseInt(input[0]);
-        int n = Integer.parseInt(input[1]);
-        int[] lines = new int[k];
+        String[] nk = br.readLine().split(" ");
+        int n = Integer.parseInt(nk[0]);
+        int k = Integer.parseInt(nk[1]);
+        long[] lines = new long[n];
 
-        int min = Integer.MAX_VALUE;
-        for (int i = 0; i < k; i++) {
-            lines[i] = Integer.parseInt(br.readLine());
-            min = Math.min(min, lines[i]);
+        long max = 0;
+        for (int i = 0; i < n; i++) {
+            lines[i] = Long.parseLong(br.readLine());
+            max = Long.max(max, lines[i]);
         }
 
-        long maxLen = 0;
-        int left = 0;
-        int right = min;
+        long left = 0;
+        long right = max;
         while (left < right) {
-            int mid = (left + right) / 2;
-            int count = 0;
-            for (int line : lines) {
+            long mid = (left + right) / 2;
+
+            long count = 0;
+            for (long line : lines) {
                 count += line / mid;
             }
 
-            if (count < n) {
+            if (count < k) {
                 right = mid;
                 continue;
             }
-
-            if (mid < maxLen) {
-                left = mid + 1;
-                continue;
-            }
-            maxLen = Math.max(maxLen, mid);
-            right = mid;
+            left = mid + 1;
         }
 
-        System.out.println(maxLen);
+        System.out.println(right - 1);
     }
 }

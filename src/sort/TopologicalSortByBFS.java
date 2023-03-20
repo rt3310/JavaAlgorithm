@@ -16,7 +16,7 @@ public class TopologicalSortByBFS {
         inDegree = new int[graph.length];
 
         setInDegree();
-        search(1);
+        search();
     }
 
     public static void setInDegree() {
@@ -27,19 +27,23 @@ public class TopologicalSortByBFS {
         }
     }
 
-    public static void search(int start) {
+    public static void search() {
         Deque<Integer> dq = new ArrayDeque<>();
-        dq.offer(start);
+        for (int i = 1; i < graph.length; i++) {
+            if (inDegree[i] == 0) {
+                dq.offerLast(i);
+            }
+        }
 
-        while (!dq.isEmpty()) {
+        for (int i = 1; i < graph.length; i++) {
+            if (dq.isEmpty()) {
+                return;
+            }
+
             int cur = dq.poll();
             System.out.print(cur + " ");
 
             for (int next : graph[cur]) {
-                if (inDegree[next] == 0) {
-                    continue;
-                }
-
                 if (--inDegree[next] == 0) {
                     dq.offer(next);
                 }

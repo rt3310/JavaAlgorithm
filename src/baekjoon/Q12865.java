@@ -24,14 +24,13 @@ public class Q12865 {
         }
 
         for (int i = 1; i <= n; i++) {
-            int j = things[i][0];
-            if (j > k) {
+            int weight = things[i][0];
+            if (weight > k) {
                 continue;
             }
-            for (int l = k - j; l > 0; l--) {
-                dp[j + l] = Math.max(dp[j + l], things[i][1] + dp[l]);
+            for (int j = k; j >= weight; j--) {
+                dp[j] = Math.max(dp[j], things[i][1] + dp[j - weight]);
             }
-            dp[j] = Math.max(dp[j], things[i][1]);
         }
 
         int max = 0;

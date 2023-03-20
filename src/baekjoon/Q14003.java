@@ -10,49 +10,53 @@ public class Q14003 {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
         int n = Integer.parseInt(br.readLine());
+        int[][] numbers = new int[n][2];
         int[] dp = new int[n];
-        dp[0] = 1;
-
-        int maxLength = 0;
-        long[] numbers = new long[n];
+        Arrays.fill(dp, Integer.MIN_VALUE);
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         for (int i = 0; i < n; i++) {
-            numbers[i] = Long.parseLong(st.nextToken());
+            numbers[i] = new int[]{Integer.parseInt(st.nextToken()), 0};
         }
 
+        dp[0] = numbers[0][0];
+        int dpCount = 1;
         for (int i = 1; i < n; i++) {
-            long curNum = numbers[i];
-            int maxNum = 0;
-            for (int j = i-1; j >= 0; j--) {
-                if (curNum > numbers[j]) {
-                    maxNum = Math.max(maxNum, dp[j]);
-                    if (dp[j] == j + 1) {
-                        break;
-                    }
+            int left = 0;
+            int right = dpCount;
+            while (left < right) {
+                int mid = (left + right) / 2;
+
+                if (dp[mid] < numbers[i][0]) {
+                    left = mid + 1;
+                    continue;
                 }
+                right = mid;
             }
-            dp[i] = maxNum + 1;
-            maxLength = Math.max(maxLength, maxNum + 1);
+            dp[right] = numbers[i][0];
+            numbers[i][1] = right;
+            if (right == dpCount) {
+                dpCount++;
+            }
         }
 
-        int answer = 0;
-        long[] results = new long[maxLength];
-        for (int i = 0; i < maxLength; i++) {
-            results[i] = 1000000001;
+        System.out.println(dpCount);
+        int[] answer = new int[dpCount];
+        int idx = dpCount - 1;
+        for (int i = n - 1; i >= 0; i--) {
+            if (numbers[i][1] == idx) {
+                answer[idx] = numbers[i][0];
+                idx--;
+            }
         }
 
-        for (int i = 0; i < n; i++) {
-            results[dp[i]-1] = Math.min(results[dp[i]-1], numbers[i]);
+        for (int num : answer) {
+            sb.append(num).append(" ");
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (long result : results) {
-            sb.append(result).append(" ");
-        }
-
-        System.out.println(maxLength);
         System.out.println(sb);
     }
 }
