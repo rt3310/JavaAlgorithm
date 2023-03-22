@@ -1,44 +1,40 @@
 package programmers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Level4_1 {
 
     public static void main(String[] args) {
-        System.out.println(solution(new String[]{"go", "gone", "guild"}));
-        System.out.println(solution(new String[]{"abc", "def", "ghi", "jklm"}));
-        System.out.println(solution(new String[]{"word", "war", "warrior", "world"}));
+        System.out.println(solution(new String[]{"1", "-", "3", "+", "5", "-", "8"}));
+        System.out.println(solution(new String[]{"5", "-", "3", "+", "1", "+", "2", "-", "4"}));
     }
-    
-    public static int solution(String[] words) {
+
+    public static int solution(String[] arr) {
         int answer = 0;
-        Map<String, Integer> counts = new HashMap<>();
+        int arrLen = arr.length;
+        int[] numbers = new int[arrLen / 2 + 1];
+        String[] operators = new String[arrLen / 2];
 
-        for (String word : words) {
-            for (int i = 1; i <= word.length(); i++) {
-                String substring = word.substring(0, i);
-                counts.put(substring, counts.getOrDefault(substring, 0) + 1);
+        int numberCount = 0;
+        int operatorCount = 0;
+        for (int i = 0; i < arrLen; i++) {
+            if (i % 2 == 0) {
+                operators[operatorCount] = arr[i];
+                operatorCount++;
+                continue;
             }
+            numbers[numberCount] = Integer.parseInt(arr[i]);
+            numberCount++;
         }
 
-        for (String word : words) {
-            int count = 0;
-            boolean isPut = false;
-            for (int i = 1; i <= word.length(); i++) {
-                count++;
-                if (counts.get(word.substring(0, i)) == 1) {
-                    answer += count;
-                    isPut = true;
-                    break;
-                }
-            }
+        Deque<Integer> dq = new ArrayDeque<>();
 
-            if (!isPut) {
-                answer += count;
+        int total = numbers[0];
+        for (int i = 1; i < arrLen / 2 + 1; i++) {
+            if (operators[i - 1].equals("-")) {
+
             }
         }
-
         return answer;
     }
 }

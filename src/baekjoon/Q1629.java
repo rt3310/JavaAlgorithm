@@ -3,8 +3,6 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Q1629 {
 
@@ -12,21 +10,22 @@ public class Q1629 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] input = br.readLine().split(" ");
-        long n = Long.parseLong(input[0]);
-        long r = Long.parseLong(input[1]);
-        long m = Long.parseLong(input[2]);
+        long a = Long.parseLong(input[0]);
+        long b = Long.parseLong(input[1]);
+        long c = Long.parseLong(input[2]);
 
-        long cur = n % m;
-        long idx = 0;
-        while (idx * 2 + 1 <= r) {
-            cur = (cur * cur) % m;
-            idx = (idx * 2) + 1;
+        System.out.println(getMul(a, b, c));
+    }
+
+    public static long getMul(long num, long pow, long mod) {
+        if (pow == 1) {
+            return num % mod;
         }
 
-        for (long i = idx + 1; i <= r; i++) {
-            cur = (cur * (n % m)) % m;
+        long value = getMul(num, pow / 2, mod);
+        if (pow % 2 == 0) {
+            return (value * value) % mod;
         }
-
-        System.out.println(cur % m);
+        return (((value * value) % mod) * (num % mod)) % mod;
     }
 }
