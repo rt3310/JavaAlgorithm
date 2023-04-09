@@ -3,6 +3,7 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Q1520 {
@@ -10,8 +11,8 @@ public class Q1520 {
     private static int m;
     private static int n;
     private static int[][] map;
+    private static int[][] dp;
     private static int[][] directions;
-    private static int[][] counts;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,8 +21,11 @@ public class Q1520 {
         m = Integer.parseInt(mn[0]);
         n = Integer.parseInt(mn[1]);
         map = new int[m][n];
+        dp = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            Arrays.fill(dp[i], -1);
+        }
         directions = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-        counts = new int[m][n];
 
         for (int i = 0; i < m; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -30,23 +34,20 @@ public class Q1520 {
             }
         }
 
-        search(0, 0, 1);
-
-        for (int[] r : counts) {
-            for (int v : r) {
-                System.out.print(v + " ");
-            }
-            System.out.println();
-        }
+        System.out.println(search(0, 0));
     }
 
-    public static void search(int curRow, int curCol, int prevCount) {
-        if (counts[curRow][curCol] != 0) {
-            counts[curRow][curCol] += prevCount;
-            return;
+    public static int search(int curRow, int curCol) {
+        if (curRow == m - 1 && curCol == n - 1) {
+            return 1;
         }
 
-        counts[curRow][curCol] += prevCount;
+        if (dp[curRow][curCol] != -1) {
+            return dp[curRow][curCol];
+        }
+
+        dp[curRow][curCol] = 0;
+
         int curHeight = map[curRow][curCol];
         for (int[] direction : directions) {
             int row = curRow + direction[0];
@@ -57,8 +58,10 @@ public class Q1520 {
             }
 
             if (map[row][col] < curHeight) {
-                search(row, col, counts[curRow][curCol]);
+                dp[curRow][curCol] += search(row, col);
             }
         }
+
+        return dp[curRow][curCol];
     }
 }
