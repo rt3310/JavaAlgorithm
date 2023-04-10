@@ -18,32 +18,33 @@ public class Q1644 {
                 list.add(i);
             }
         }
-        System.out.println(list);
+
+        if (list.isEmpty()) {
+            System.out.println(0);
+            return;
+        }
+
         int left = 0;
         int right = 0;
-
+        int total = list.get(0);
         int count = 0;
-        while (left < n) {
-            int sum;
-            if (left == right) {
-                sum = left;
-            } else {
-                sum = list.get(left) + list.get(right);
+
+        int size = list.size();
+        while (left <= right) {
+            if (total > n) {
+                total -= list.get(left);
+                left++;
+                continue;
             }
 
-            if (sum == n) {
+            if (total == n) {
                 count++;
-                left++;
-                continue;
             }
-
-            if (sum < n) {
-                left++;
-                continue;
+            right++;
+            if (right >= size) {
+                break;
             }
-
-            right--;
-            continue;
+            total += list.get(right);
         }
 
         System.out.println(count);

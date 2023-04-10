@@ -5,37 +5,29 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class Q6549 {
-    
+public class Q1725 {
+
     private static int n;
     private static int[] arr;
     private static int[] tree;
     private static long maxArea;
-    
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
 
-        while (true) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            n = Integer.parseInt(st.nextToken());
-            if (n == 0) {
-                break;
-            }
+        n = Integer.parseInt(br.readLine());
+        arr = new int[n + 1];
+        tree = new int[n * 4];
+        maxArea = 0L;
 
-            arr = new int[n + 1];
-            tree = new int[n * 4];
-            maxArea = 0L;
-            for (int i = 1; i <= n; i++) {
-                arr[i] = Integer.parseInt(st.nextToken());
-            }
-
-            init(1, n, 1);
-            getMaxArea(1, n);
-
-            sb.append(maxArea).append("\n");
+        for (int i = 1; i <= n; i++) {
+            arr[i] = Integer.parseInt(br.readLine());
         }
-        System.out.print(sb);
+
+        init(1, n, 1);
+        getMaxArea(1, n);
+
+        System.out.print(maxArea);
     }
 
     public static int init(int start, int end, int idx) {

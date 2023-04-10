@@ -3,58 +3,55 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class Q1208 {
 
     private static int n;
     private static int s;
-    private static int[] numbers;
-    private static int[] tree;
-    private static int count;
-    private static int positiveTotal;
+    private static long[] numbers;
+    private static Map<Long, Long> leftCounts;
+    private static Map<Long, Long> rightCounts;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] ns = br.readLine().split(" ");
         n = Integer.parseInt(ns[0]);
         s = Integer.parseInt(ns[1]);
-        count = 0;
+        leftCounts = new HashMap<>();
+        rightCounts = new HashMap<>();
+        int mid = n / 2;
 
-        numbers = new int[n];
-        tree = new int[n * 4];
+        numbers = new long[n];
         StringTokenizer st = new StringTokenizer(br.readLine());
-        positiveTotal = 0;
         for (int i = 0; i < n; i++) {
-            numbers[i] = Integer.parseInt(st.nextToken());
-            if (numbers[i] > 0) {
-                positiveTotal += numbers[i];
-            }
+            numbers[i] = Long.parseLong(st.nextToken());
+        }
+        leftSearch(0, mid, 0);
+        rightSearch(mid, n, 0);
+
+        long count = 0;
+        for (Map.Entry<Long, Long> left: leftCounts.entrySet()) {
+            count += rightCounts.getOrDefault(s - left.getKey(), 0L) * left.getValue();
         }
 
-        search(0, 0);
-
-        System.out.println(count);
+        System.out.println(s == 0 ? count - 1: count);
     }
 
-    public static void search(int cur, int total) {
-        if (total + positiveTotal < s) {
-            return;
+    public static void leftSearch(int start, int dest, long total) {
+        leftCounts.put(total, leftCounts.getOrDefault(total, 0L) + 1);
+        for (int i = start; i < dest; i++) {
+            leftSearch(i + 1, dest, total + numbers[i]);
         }
+    }
 
-        if (total >= s) {
-            if (total == s) {
-                count++;
-            }
-            return;
+    public static void rightSearch(int start, int dest, long total) {
+        rightCounts.put(total, rightCounts.getOrDefault(total, 0L) + 1);
+        for (int i = start; i < dest; i++) {
+            rightSearch(i + 1, dest, total + numbers[i]);
         }
-
-        if (cur == n) {
-            return;
-        }
-
-        search(cur + 1, total + numbers[cur]);
-        search(cur + 1, total);
     }
 }

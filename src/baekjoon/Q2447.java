@@ -48,7 +48,7 @@ public class Q2447 {
                     if (i == 1 && j == 1) {
                         continue;
                     }
-                    square(r + 3 * i, c + 3 * j, depth / 3);
+                    square(r + (depth / 3) * i, c + (depth / 3) * j, depth / 3);
                 }
             }
         }
