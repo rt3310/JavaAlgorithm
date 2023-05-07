@@ -11,21 +11,38 @@ public class Q9527 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] ab = br.readLine().split(" ");
-        int a = Integer.parseInt(ab[0]);
-        int b = Integer.parseInt(ab[1]);
+        long a = Long.parseLong(ab[0]);
+        long b = Long.parseLong(ab[1]);
 
-        int total = 0;
-        for (int i = a; i <= b; i++) {
-            String binaryString = Integer.toBinaryString(i);
-            System.out.println(i + " " + binaryString);
-            char[] chars = binaryString.toCharArray();
-            for (char c: chars) {
-                if (c == '1') {
-                    total++;
+        String aBinary = Long.toBinaryString(a - 1);
+        String bBinary = Long.toBinaryString(b);
+        int aLength = aBinary.length();
+        int bLength = bBinary.length();
+
+        int aTotal = a - 1 == 0 ? 0 : 1;
+        for (int i = 0; i < aLength; i++) {
+            if (aBinary.charAt(i) == '1') {
+                int init = (int) Math.pow(2, aLength - i - 2);
+                while (init >= 1) {
+                    aTotal += init;
+                    init /= 2;
                 }
             }
         }
 
-        System.out.println(total);
+        int bTotal = b == 0 ? 0 : 1;
+        for (int i = 0; i < bLength; i++) {
+            if (bBinary.charAt(i) == '1') {
+                int init = (int) Math.pow(2, bLength - i - 2);
+                while (init >= 1) {
+                    bTotal += init;
+                    init /= 2;
+                }
+            }
+        }
+
+        System.out.println("aTotal = " + aTotal);
+        System.out.println("bTotal = " + bTotal);
+        System.out.println(bTotal - aTotal);
     }
 }
