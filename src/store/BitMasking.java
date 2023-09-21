@@ -16,4 +16,16 @@ public class BitMasking {
             System.out.println(Integer.toBinaryString(subset));
         }
     }
+
+    int getValue(int mask, int r, int c) {
+        int idx = (r << 2) + c;
+        return (mask >> (idx << 2)) & 15;
+    }
+
+    void setValue(int mask, int r, int c, int value) {
+        int idx = (r << 2) + c;
+        mask = mask & ~(15 << (idx << 2)) | (value << (idx << 2));
+        //            ...111100001111...      ...0000{value}0000...
+    }
+
 }

@@ -53,7 +53,6 @@ public class Q1939 {
         dq.offerLast(start);
         visited[start[0]] = true;
 
-
         while (!dq.isEmpty()) {
             int[] cur = dq.pollFirst();
 
@@ -63,11 +62,7 @@ public class Q1939 {
                 }
 
                 visited[next[0]] = true;
-                int min = Math.min(cur[1], next[0]);
-                if (next[0] == end) {
-                    max = min;
-                }
-                dq.offerLast(new int[]{next[0], min});
+                dq.offerLast(new int[]{next[0], Math.min(cur[1], next[1])});
             }
         }
     }
